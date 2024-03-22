@@ -1,8 +1,8 @@
-###
+### get con todos los comercios
 GET http://localhost:3000/api/comercio HTTP/1.1
 
 
-###
+### subir comercios a la bbdd
 POST http://localhost:3000/api/comercio HTTP/1.1
 Content-Type: application/json
 
@@ -14,3 +14,35 @@ Content-Type: application/json
     "telefono": "61934358",
     "id_pagina": 1 
 }
+
+### update de un comercio
+PUT http://localhost:3000/api/comercio/1234 HTTP/1.1
+Content-Type: application/json
+
+{
+    "nombre": "holdersUnited upd",
+    "cif": "1234",
+    "direccion": "btcAvenue",
+    "email": "holders@gmail.com",
+    "telefono": "61934358",
+    "id_pagina": 1
+}
+
+### borrado logico
+DELETE http://localhost:3000/api/comercio/1234?logical=true HTTP/1.1
+
+### subida de otro comercio
+POST http://localhost:3000/api/comercio HTTP/1.1
+Content-Type: application/json
+
+{
+    "nombre": "AAAAAAAA",
+    "cif": "5678",
+    "direccion": "aaaaaaa",
+    "email": "aaa@gmail.com",
+    "telefono": "61934339",
+    "id_pagina": 2
+}
+
+### borrado de la bbdd
+DELETE http://localhost:3000/api/comercio/1234 HTTP/1.1

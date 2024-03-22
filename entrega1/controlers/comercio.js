@@ -3,6 +3,7 @@ const { handleHttpError } = require("../utils/handleError");
 const { matchedData } = require('express-validator');
 
 // Me hago esta funcion para no tener que estar poniendo el try y catch todo el rato
+// Me he sentido muy inteligente haciendo esto pero son las 4am e igual no es para tanto JAJAAJ
 const errorHandler = async (req, res, operation) => {
     try {
         return await operation();
@@ -12,62 +13,59 @@ const errorHandler = async (req, res, operation) => {
     }
 };
 
-// Controlador para obtener todos los comercios. Puede incluir un criterio de ordenación.
+// funcion para recibir todos los comercios
 const getItems = (req, res) => errorHandler(req, res, async () => {
     let query = comercioModel.find();
-    // Si se especifica un orden para el campo CIF, lo aplica.
+    //esto es para filtrar el CIF  (ayuda de dario)
     if (req.query.sortByCIF === 'asc') {
         query = query.sort({ cif: 1 });
     }
-    // Ejecuta la consulta y envía los resultados.
     const data = await query.exec();
     res.send(data);
 });
 
-// Controlador para obtener un comercio específico por su CIF.
+// devolver un comercio especifico por cif
 const getItem = (req, res) => errorHandler(req, res, async () => {
-    const { cif } = matchedData(req); // Extrae y valida los datos del request.
+    const { cif } = matchedData(req);
     const data = await comercioModel.findOne({ cif });
-    // Si no encuentra el comercio, envía un error.
     if (!data) {
         return handleHttpError(res, 'COMMERCE_NOT_FOUND', 404);
     }
-    res.send(data); // Envía los datos del comercio encontrado.
+    res.send(data);
 });
 
-// Controlador para crear un nuevo comercio.
+// creo comercios
 const createItem = (req, res) => errorHandler(req, res, async () => {
-    const body = matchedData(req); // Valida los datos del request.
-    const data = await comercioModel.create(body); // Crea el comercio con los datos validados.
-    console.log(data); // Registra el comercio creado.
-    res.send(data); // Envía los datos del comercio creado.
+    const body = matchedData(req);
+    const data = await comercioModel.create(body);
+    res.send(data);
 });
 
-// Controlador para actualizar un comercio existente por su CIF.
+// actualizar
 const updateItem = (req, res) => errorHandler(req, res, async () => {
-    const { cif, ...body } = matchedData(req); // Extrae el CIF y el resto de datos del body del request.
+    const { cif, ...body } = matchedData(req);
+    //busco el comercio a actualizar con el cif
     const updatedCommerce = await comercioModel.findOneAndUpdate({ cif }, body, { new: true });
-    // Si no encuentra el comercio a actualizar, envía un error.
     if (!updatedCommerce) {
         return handleHttpError(res, 'COMMERCE_NOT_FOUND', 404);
     }
-    res.send(updatedCommerce); // Envía los datos del comercio actualizado.
+    res.send(updatedCommerce);
 });
 
-// Controlador para eliminar un comercio por su CIF. Soporta eliminación lógica mediante un parámetro.
+// Eliminar comercios
 const deleteItem = (req, res) => errorHandler(req, res, async () => {
     const { cif } = matchedData(req); // Valida el CIF recibido en el request.
     let result;
-    // Decide entre eliminación lógica o física basándose en un parámetro del query.
+    // el logico no borra de la base de datos, pero lo marca como eliminado, importante tener encuenta porque no me deja hacer un post con el mismo id si uso el logico
+    //seguramente el comentaro no va aqui pero me da igual
     if (req.query.logical === 'true') {
         result = await comercioModel.findOneAndUpdate({ cif }, { deleted: true }, { new: true });
     } else {
         result = await comercioModel.findOneAndDelete({ cif });
     }
-    res.send(result); // Envía el resultado de la operación de eliminación.
+    res.send(result);
 });
 
-// Exporta los controladores para ser utilizados en las rutas.
 module.exports = {
     getItems, getItem, createItem, updateItem, deleteItem
 };

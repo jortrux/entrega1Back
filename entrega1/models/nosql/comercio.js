@@ -25,9 +25,9 @@ const ComercioScheme = new mongoose.Schema(
         }
     },
     {
-        timestamp: true, // TODO createdAt, updatedAt
+        timestamp: true,
         versionKey: false
     }
 )
 ComercioScheme.plugin(mongooseDelete, {overrideMethods: "all"})
-module.exports = mongoose.model("comercio", ComercioScheme) // Nombre de la colección (o de la tabla en SQL)
+module.exports = mongoose.model("comercio", ComercioScheme)
