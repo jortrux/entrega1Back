@@ -1,0 +1,6 @@
+###
+GET http://localhost:3000/api/comercio?sortByCIF=asc HTTP/1.1
+
+
+###
+GET http://localhost:3000/api/comercio HTTP/1.1
