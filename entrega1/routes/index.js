@@ -1,14 +1,21 @@
-const mongoose = require('mongoose')
+const express = require("express")
+const fs = require("fs")
+const router = express.Router()
 
-const dbConnect = () => {
-    const db_uri = process.env.DB_URI
-    mongoose.set('strictQuery', false)
-    try{
-        mongoose.connect(db_uri)
-    }catch(error){
-        console.err("Error conectando a la BD:", error)
-    }
-    //Listen events
-    mongoose.connection.on("connected",() => console.log("Conectado a la BD"))
+const removeExtension = (fileName) => {
+    //Solo la primera parte del split (lo de antes del punto)
+    return fileName.split('.').shift()
 }
-module.exports = dbConnect
+
+//devuelve el nombre de los ficheros que se encuentran dentro del directorio actual (__dirname)
+//const files = fs.readdirSync(__dirname);
+//console.log({files})
+
+fs.readdirSync(__dirname).filter((file) => {
+    const name = removeExtension(file) // index, users, storage, tracks
+    if(name !== 'index') {
+        router.use('/' + name, require('./'+name)) // http://localhost:3000/api/tracks
+    }
+})
+
+module.exports = router

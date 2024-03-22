@@ -1,6 +1,16 @@
 ###
-GET http://localhost:3000/api/comercio?sortByCIF=asc HTTP/1.1
+GET http://localhost:3000/api/comercio HTTP/1.1
 
 
 ###
-GET http://localhost:3000/api/comercio HTTP/1.1
+POST http://localhost:3000/api/comercio HTTP/1.1
+Content-Type: application/json
+
+{
+    "nombre": "HoldersUnited",
+    "cif": "1234",
+    "direccion": "btcAvenue",
+    "email": "jorge@gmail.com",
+    "telefono": "61934358",
+    "id_pagina": 1 
+}

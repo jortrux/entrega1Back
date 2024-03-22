@@ -1,9 +1,10 @@
+//me defino el modelo comercio que contiene los siguientes atributos, que es lo mismo de siempre pero con los parametros pedidos
 const mongoose = require("mongoose")
 const mongooseDelete = require("mongoose-delete")
 
 const ComercioScheme = new mongoose.Schema(
     {
-        name: {
+        nombre: {
             type: String
         },
         cif: {
